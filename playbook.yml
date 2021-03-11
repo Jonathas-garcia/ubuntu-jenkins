@@ -1,0 +1,17 @@
+- hosts: webservers
+
+  tasks:
+
+    - name: Pull docker image
+      docker_image:
+        name: jonathasgarcia/demo-jenkins-ansible:latest
+        source: pull
+
+    - name: Run docker container
+      docker_container:
+        name: demoJenkinsAnsibleApplication
+        image: jonathasgarcia/demo-jenkins-ansible:latest
+        state: started
+        pull: true
+        ports:
+        - "8000:8000"

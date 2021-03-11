@@ -12,8 +12,13 @@ RUN apt-get -qq -y install sudo
 RUN /usr/bin/curl -fsSL https://get.docker.com -o get-docker.sh
 RUN sh get-docker.sh
 
+
+#INSTALA ANSIBLE
+RUN sudo apt update
+RUN sudo apt -y install ansible
+
 #INSTALA JENKINS
-RUN sudo apt -y install openjdk-8-jre
+RUN sudo apt -y install openjdk-8-jdk
 RUN wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
 RUN sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
 RUN sudo apt-get update
@@ -24,12 +29,6 @@ RUN sudo apt -y install vim
 RUN sudo service jenkins start
 
 RUN chmod 777 run/systemd/container
+#RUN chmod 777 var/run/docker.sock
 
-#INSTALA ANSIBLE
-#RUN apt install python -y
-#RUN apt install python3-pip
-#RUN pip3 install boto boto3
-#RUN pip3 install ansible
-#RUN ansible --version
-#RUN pip install 'docker-compose'
 
