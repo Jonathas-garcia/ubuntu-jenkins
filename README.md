@@ -1,7 +1,8 @@
 
-# Passos
-
 Projeto com dockerfile que sobe imagem ubuntu com jenkins e Ansible instalados(e outras ferramentas), para criar pipeline com deploy em instancia ec2 configurada.
+
+
+# Passos
 
 ### Executando ubunto com Jenkins
 
@@ -129,7 +130,7 @@ pipeline {
 
   
 
-### Na máquina host (rodando jenkins)
+## Na máquina host (rodando jenkins)
 
 - Copiar chave SSH. 
 	- (/var/lib/jenkins/workspace/playbooks/NOME_DA_CHAVE.pem)
@@ -138,23 +139,7 @@ pipeline {
 - Permissão na chave PEM(avaliar outras alternativas).
 
 
- 
-
-### Na máquina EC2 (destino)
-
-- Configurar docker-compose 
-
-```
-
-apt update
-
-apt install python3 python3-pip
-
-pip3 install docker docker-compose
-
-```
-
-### Arquivo hosts
+### Arquivo *hosts*
 - Alterar arquivo com os parâmetros corretos.
 	 - **IP_MAQUINA_DESTINO** = IP máquina EC2. Exemplo: 54.237.114.3
 	 - **NOME_USUARIO** = Usuário para se conectar a instância EC2. Exemplo: ubuntu
@@ -164,10 +149,12 @@ pip3 install docker docker-compose
 {IP_MAQUINA_DESTINO} ansible_connection=ssh ansible_user={NOME_USUARIO} ansible_ssh_private_key_file={PATH_CHAVE_SSH} ansible_python_interpreter=/usr/bin/python3
 ```
 
-  ### Arquivo playbook.yml
+### Arquivo *playbook.yml*
   - Alterar arquivo com os parâmetros corretos.
 	- **NOME_IMAGEM_NO_DOCKERHUB** = tag da imagem no dockerhub. Exemplo: jonathasgarcia/demo-jenkins-ansible  
 	- **NOME_CONTAINER** = Nome que será gerado o container.
+  - Setar portas utilizadas pela aplicação.
+  
   ```
  - hosts: webservers
     tasks:
@@ -184,4 +171,14 @@ pip3 install docker docker-compose
 	     ports:
 	     - "8000:8000"
   ```
+
+## Na máquina EC2 (destino)
+
+- Configurar docker-compose 
+
+```
+apt update
+apt install python3 python3-pip
+pip3 install docker docker-compose
+```
   
