@@ -25,9 +25,7 @@ RUN sudo apt-get -y install jenkins
 RUN sudo apt -y install git
 RUN sudo apt -y install maven
 RUN sudo apt -y install vim
-RUN sudo service jenkins start
 
 RUN chmod 777 run/systemd/container
-#RUN chmod 777 var/run/docker.sock
 
 

@@ -6,26 +6,40 @@ Projeto com dockerfile que sobe imagem ubuntu com jenkins e Ansible instalados(e
 ### Executando ubunto com Jenkins
  
 ```
-docker run -it --name ubuntu-jenkins -p 8080:8080 -v jenkins-data:/var/lib/jenkins -v "$HOME":/home -v /var/run/docker.sock:/var/run/docker.sock ubuntu-jenkins
+docker run -it --name ubuntu-jenkins-ansible -p 8080:8080 -v jenkins-data:/var/lib/jenkins -v "$HOME":/home -v /var/run/docker.sock:/var/run/docker.sock jonathasgarcia/ubuntu-jenkins
+```
+
+- Executar comando para iniciar jenkins
+
+```
+sudo service jenkins start
+```
+
+- Permissão para utilizar docker do host
+
+```
+chmod 777 var/run/docker.sock
 ```
 
 - Após subir imagem docker acessar Jenkins - localhost:8080  
 
-- Instalar plugins jenkins de git, docker, maven, blueOcean, ansible etc.
+- Instalar plugins jenkins de docker, maven, blueOcean, ansible etc.
 
 - Configurar chave dockerhub em credentials Manager com nome 'user-dockerhub-token'.
   
 - Configurar tool docker 
-	- name: myDocker
+	- name: docker
 
 - Configurar tool ansible
-	- name: myAnsible
+	- name: ansible
 	- Ansible home: /usr/bin
 	
 - Configurar tool maven 
 	- name: maven
 	- Maven home: maven /usr/share/maven
 
+- Criar pasta "playbooks" no diretório do workspace do jenkins
+	 - var/lib/jenkins/workspace
   
 
 ### Pipeline utilizado:
@@ -70,7 +84,7 @@ pipeline {
 		stage('Build docker image') {
 			steps {
 				script {
-					def dockerHome = tool 'myDocker'
+					def dockerHome = tool 'docker'
 					env.PATH = "${dockerHome}/bin:${env.PATH}"
 					echo "Iniciando build da imagem"
 					def image = docker.build("${PROJECT_NAME}:${env.BUILD_ID}")
@@ -93,9 +107,9 @@ pipeline {
 		stage('Deploy') {
 			steps {
 				script {
-					def ansibleHome = tool 'myAnsible'
+					def ansibleHome = tool 'ansible'
 					env.PATH = "${ansibleHome}:${env.PATH}"
-					ansiblePlaybook(playbook:'/var/lib/jenkins/workspace/playbooks/playbook.yml', inventory: '/var/lib/jenkins/workspace/playbooks/hosts', colorized: true)
+					ansiblePlaybook(playbook:'/var/lib/jenkins/workspace/playbooks/playbook.yml', inventory: '/var/lib/jenkins/workspace/playbooks/hosts', disableHostKeyChecking: true, colorized: true)
 					//sh "ansible-playbook -vvv /var/lib/jenkins/workspace/playbooks/playbook.yml -i /var/lib/jenkins/workspace/playbooks/hosts"
 				}
 			}
@@ -136,6 +150,9 @@ pip3 install docker docker-compose
 
 ### Arquivo hosts
 - Alterar arquivo com os parâmetros corretos.
+	 - **IP_MAQUINA_DESTINO** = IP máquina EC2. Exemplo: 54.237.114.3
+	 - **NOME_USUARIO** = Usuário para se conectar a instância EC2. Exemplo: ubuntu
+	 - **PATH_CHAVE_SSH** = Path absoluto da chave PEM. Exemplo: /var/lib/jenkins/workspace/playbooks/chave.pem
 ```
 [webservers]
 {IP_MAQUINA_DESTINO} ansible_connection=ssh ansible_user={NOME_USUARIO} ansible_ssh_private_key_file={PATH_CHAVE_SSH} ansible_python_interpreter=/usr/bin/python3
@@ -143,14 +160,14 @@ pip3 install docker docker-compose
 
   ### Arquivo playbook.yml
   - Alterar arquivo com os parâmetros corretos.
-  
+	- **NOME_IMAGEM_NO_DOCKERHUB** = tag da imagem no dockerhub. Exemplo: jonathasgarcia/demo-jenkins-ansible  
   ```
   - hosts: webservers
 	tasks:
 	  - name: Pull docker image
-		  docker_image:
-			name: {NOME_IMAGEM_NO_DOCKERHUB}
-			source: pull  
+		docker_image:
+		  name: {NOME_IMAGEM_NO_DOCKERHUB}
+		  source: pull  
 	  - name: Run docker container
 		docker_container:
 		  name: demoJenkinsAnsibleApplication
