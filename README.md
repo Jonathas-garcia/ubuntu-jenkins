@@ -146,7 +146,7 @@ pip3 install docker docker-compose
   
   ```
  - hosts: webservers
-   tasks:
+    tasks:
 	 - name: Pull docker image
 	   docker_image:
 	     name: {NOME_IMAGEM_NO_DOCKERHUB}
