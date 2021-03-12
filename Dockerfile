@@ -1,5 +1,4 @@
 FROM ubuntu:20.04
-MAINTAINER Jonathas Garcia <jonathas.cgarcia@gmail.com>
 ENV TZ=America/Sao_Paulo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
