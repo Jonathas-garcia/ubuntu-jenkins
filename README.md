@@ -161,20 +161,21 @@ pip3 install docker docker-compose
   ### Arquivo playbook.yml
   - Alterar arquivo com os parâmetros corretos.
 	- **NOME_IMAGEM_NO_DOCKERHUB** = tag da imagem no dockerhub. Exemplo: jonathasgarcia/demo-jenkins-ansible  
+	- **NOME_CONTAINER** = Nome que será gerado o container.
   ```
-  - hosts: webservers
-	tasks:
-	  - name: Pull docker image
-		docker_image:
-		  name: {NOME_IMAGEM_NO_DOCKERHUB}
-		  source: pull  
-	  - name: Run docker container
-		docker_container:
-		  name: demoJenkinsAnsibleApplication
-		  image: {NOME_IMAGEM_NO_DOCKERHUB}
-		  state: started
-		  pull: true
-		  ports:
-		  - "8000:8000"
+ - hosts: webservers
+    tasks:
+	 - name: Pull docker image
+	   docker_image:
+	     name: {NOME_IMAGEM_NO_DOCKERHUB}
+	     source: pull  
+	 - name: Run docker container
+	   docker_container:
+	     name: {NOME_CONTAINER}
+	     image: {NOME_IMAGEM_NO_DOCKERHUB}
+	     state: started
+	     pull: true
+	     ports:
+	     - "8000:8000"
   ```
   
