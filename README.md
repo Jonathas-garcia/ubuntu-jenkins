@@ -4,9 +4,17 @@
 Projeto com dockerfile que sobe imagem ubuntu com jenkins e Ansible instalados(e outras ferramentas), para criar pipeline com deploy em instancia ec2 configurada.
 
 ### Executando ubunto com Jenkins
+
+- Cria volume jenkins-data
+
+```
+docker volume create jenkins-data
+```
+
+- Executa container referenciando volume criado para jenkins, home para compartilhar arquivos e docker do host para execução de comandos na esteira.
  
 ```
-docker run -it --name ubuntu-jenkins-ansible -p 8080:8080 -v jenkins-data:/var/lib/jenkins -v "$HOME":/home -v /var/run/docker.sock:/var/run/docker.sock jonathasgarcia/ubuntu-jenkins
+docker run -it --name ubuntu-jenkins-ansible -p 8080:8080 -v jenkins-data:/var/lib/jenkins -v ${HOME}:/home -v /var/run/docker.sock:/var/run/docker.sock jonathasgarcia/ubuntu-jenkins
 ```
 
 - Executar comando para iniciar jenkins
@@ -121,7 +129,7 @@ pipeline {
 
   
 
-### Na máquina host 
+### Na máquina host (rodando jenkins)
 
 - Copiar chave SSH. 
 	- (/var/lib/jenkins/workspace/playbooks/NOME_DA_CHAVE.pem)
@@ -130,11 +138,9 @@ pipeline {
 - Permissão na chave PEM(avaliar outras alternativas).
 
 
+ 
 
-  
-  
-
-### Na máquina destino  
+### Na máquina EC2 (destino)
 
 - Configurar docker-compose 
 
