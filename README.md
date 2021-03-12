@@ -148,12 +148,12 @@ pip3 install docker docker-compose
   - hosts: webservers
 	tasks:
 	  - name: Pull docker image
-		  docker_image:
+		docker_image:
 			name: {NOME_IMAGEM_NO_DOCKERHUB}
 			source: pull  
 	  - name: Run docker container
 		docker_container:
-		  name: demoJenkinsAnsibleApplication
+		  name: {NOME_CONTAINER}
 		  image: {NOME_IMAGEM_NO_DOCKERHUB}
 		  state: started
 		  pull: true
