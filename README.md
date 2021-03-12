@@ -1,8 +1,9 @@
 
 # Passos
 
+Projeto com dockerfile que sobe imagem ubuntu com jenkins e Ansible instalados(e outras ferramentas), para criar pipeline com deploy em instancia ec2 configurada.
 
-### Executando Jenkins
+### Executando ubunto com Jenkins
  
 ```
 docker run -it --name ubuntu-jenkins -p 8080:8080 -v jenkins-data:/var/lib/jenkins -v "$HOME":/home -v /var/run/docker.sock:/var/run/docker.sock ubuntu-jenkins
@@ -12,7 +13,7 @@ docker run -it --name ubuntu-jenkins -p 8080:8080 -v jenkins-data:/var/lib/jenki
 
 - Instalar plugins jenkins de git, docker, maven, blueOcean, ansible etc.
 
-- Configurar chave dockerhub em credentials Manager.
+- Configurar chave dockerhub em credentials Manager com nome 'user-dockerhub-token'.
   
 - Configurar tool docker 
 	- name: myDocker
@@ -38,7 +39,7 @@ pipeline {
 		PROJECT_NAME = 'demo-jenkins-ansible'
 		IMAGE_NAME = 'jonathasgarcia/demo-jenkins-ansible'
 		GIT_URL_REPO = 'https://github.com/Jonathas-garcia/demo-jenkins-ansible.git'
-		DOCKER_HUB_CREDENTIAL = 'jonathas-garcia-dockerhub-token'
+		DOCKER_HUB_CREDENTIAL = 'user-dockerhub-token'
 	}
 
 	stages {
@@ -133,5 +134,30 @@ pip3 install docker docker-compose
 
 ```
 
+### Arquivo hosts
+- Alterar arquivo com os parâmetros corretos.
+```
+[webservers]
+{IP_MAQUINA_DESTINO} ansible_connection=ssh ansible_user={NOME_USUARIO} ansible_ssh_private_key_file={PATH_CHAVE_SSH} ansible_python_interpreter=/usr/bin/python3
+```
+
+  ### Arquivo playbook.yml
+  - Alterar arquivo com os parâmetros corretos.
   
+  ```
+  - hosts: webservers
+	tasks:
+	  - name: Pull docker image
+		  docker_image:
+			name: {NOME_IMAGEM_NO_DOCKERHUB}
+			source: pull  
+	  - name: Run docker container
+		docker_container:
+		  name: demoJenkinsAnsibleApplication
+		  image: {NOME_IMAGEM_NO_DOCKERHUB}
+		  state: started
+		  pull: true
+		  ports:
+		  - "8000:8000"
+  ```
   
