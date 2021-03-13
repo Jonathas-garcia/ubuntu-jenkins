@@ -72,7 +72,7 @@ pipeline {
 	
 	//PREENCHER VARIAVEIS DE ACORDO COM AS INFOS DO PROJETO
 	environment {
-	    JAVA_VERSION = '11'
+	    	JAVA_VERSION = '11'
 		PROJECT_NAME = 'demo-jenkins-ansible-java11'
 		IMAGE_NAME = 'jonathasgarcia/demo-jenkins-ansible-java11'
 		GIT_URL_REPO = 'https://github.com/Jonathas-garcia/demo-jenkins-ansible-java11.git'
@@ -157,7 +157,7 @@ pipeline {
 					                extraVars: [
                                         			image_name: "${IMAGE_NAME}",
                                         			container_name: "${PROJECT_NAME}"
-                                    				])
+                                    			])
 				}
 			}
 		}
