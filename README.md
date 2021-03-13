@@ -92,17 +92,17 @@ pipeline {
 				echo "PATH_ANSIBLE_PLAYBOOK = ${PATH_ANSIBLE_PLAYBOOK}"
 				echo "PATH_ANSIBLE_INVENTORY = ${PATH_ANSIBLE_INVENTORY}"
 				script {
-				    echo "Listando opções SDK disponíveis"
-			        sh (script: "update-java-alternatives --list", returnStatus: true) 
+					echo "Listando opções SDK disponíveis"
+			        	sh (script: "update-java-alternatives --list", returnStatus: true) 
         
-                    if ("${JAVA_VERSION}" == '11') {
-                        echo 'Setando config para Java SDK 11'
-                        sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.11.0-openjdk-amd64'
+                    			if ("${JAVA_VERSION}" == '11') {
+                        			echo 'Setando config para Java SDK 11'
+                        			sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.11.0-openjdk-amd64'
                         
-                    } else if("${JAVA_VERSION}" == '8') {
-                        echo 'Setando config para Java SDK 8'
-                        sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.8.0-openjdk-amd64'
-                    }
+					} else if("${JAVA_VERSION}" == '8') {
+                        			echo 'Setando config para Java SDK 8'
+                        			sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.8.0-openjdk-amd64'
+                    			}
 				}
 			}
 		}
