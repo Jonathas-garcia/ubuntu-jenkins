@@ -48,7 +48,7 @@ chmod 777 var/run/docker.sock
 	- Maven home: maven /usr/share/maven
 
 - Criar pasta "playbooks" no diretório do workspace do jenkins
-	 - var/lib/jenkins/workspace
+	- var/lib/jenkins/workspace
   
 - Executar comando para habilitar que jenkins execute comando SUDO
 
@@ -116,7 +116,7 @@ pipeline {
 
 		stage('Unit Tests') {
 			steps {
-    			echo "Iniciando unit tests"
+    				echo "Iniciando unit tests"
 				sh 'mvn -version'
 				sh 'mvn clean test'
 			}
@@ -155,9 +155,9 @@ pipeline {
 					                disableHostKeyChecking: true, 
 					                colorized: true,
 					                extraVars: [
-                                        image_name: "${IMAGE_NAME}",
-                                        container_name: "${PROJECT_NAME}"
-                                    ])
+                                        			image_name: "${IMAGE_NAME}",
+                                        			container_name: "${PROJECT_NAME}"
+                                    				])
 				}
 			}
 		}
