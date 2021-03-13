@@ -171,7 +171,7 @@ pipeline {
 
 ## Na máquina host (rodando jenkins)
 
-- Copiar chave SSH. 
+- Copiar chave SSH de acesso a instancia EC2. 
 	- (/var/lib/jenkins/workspace/playbooks/NOME_DA_CHAVE.pem)
 - Copiar arquivos hosts e playbook.yml. 
 	- (/var/lib/jenkins/workspace/playbooks)
