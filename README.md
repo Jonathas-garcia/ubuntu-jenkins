@@ -21,6 +21,8 @@ docker run -it --rm --name ubuntu-jenkins-ansible -p 8080:8080 -v jenkins-data:/
 
 - Após subir imagem docker acessar Jenkins - localhost:8080  
 
+### Configurando Token, Plugins e Tools no Jenkins
+
 - Instalar plugins jenkins de docker, maven, blueOcean, ansible etc.
 
 - Configurar chave dockerhub em credentials Manager com nome 'user-dockerhub-token'.
