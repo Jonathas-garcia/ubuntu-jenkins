@@ -15,20 +15,9 @@ docker volume create jenkins-data
 - Executa container referenciando volume criado para jenkins, home para compartilhar arquivos e docker do host para execução de comandos na esteira.
  
 ```
-docker run -it --name ubuntu-jenkins-ansible -p 8080:8080 -v jenkins-data:/var/lib/jenkins -v ${HOME}:/home -v /var/run/docker.sock:/var/run/docker.sock jonathasgarcia/ubuntu-jenkins
+docker run -it --rm --name ubuntu-jenkins-ansible -p 8080:8080 -v jenkins-data:/var/lib/jenkins -v ${HOME}:/home -v /var/run/docker.sock:/var/run/docker.sock ubuntu-jenkins /bin/bash
 ```
 
-- Executar comando para iniciar jenkins
-
-```
-sudo service jenkins start
-```
-
-- Permissão para utilizar docker do host
-
-```
-chmod 777 var/run/docker.sock
-```
 
 - Após subir imagem docker acessar Jenkins - localhost:8080  
 
@@ -47,20 +36,7 @@ chmod 777 var/run/docker.sock
 	- name: maven
 	- Maven home: maven /usr/share/maven
 
-- Criar pasta "playbooks" no diretório do workspace do jenkins
-	- var/lib/jenkins/workspace
   
-- Executar comando para habilitar que jenkins execute comando SUDO
-
-```
-visudo -f /etc/sudoers
-```
-- Adicionar na ultima linha o conteúdo abaixo:
-```
-jenkins ALL= NOPASSWD: ALL
-```
-
-
 ### Pipeline utilizado para projetos maven versões Java 11 e 8:
 
 - Configurar variáveis
@@ -72,12 +48,12 @@ pipeline {
 	
 	//PREENCHER VARIAVEIS DE ACORDO COM AS INFOS DO PROJETO
 	environment {
-	    	JAVA_VERSION = '11'
+	    JAVA_VERSION = '11'
 		PROJECT_NAME = 'demo-jenkins-ansible-java11'
 		IMAGE_NAME = 'jonathasgarcia/demo-jenkins-ansible-java11'
 		GIT_URL_REPO = 'https://github.com/Jonathas-garcia/demo-jenkins-ansible-java11.git'
-		PATH_ANSIBLE_PLAYBOOK = '/var/lib/jenkins/workspace/playbooks/playbook.yml'
-		PATH_ANSIBLE_INVENTORY = '/var/lib/jenkins/workspace/playbooks/hosts'
+		PATH_ANSIBLE_PLAYBOOK = '/ansible-files/playbook.yml'
+		PATH_ANSIBLE_INVENTORY = '/ansible-files/hosts'
 		DOCKER_HUB_CREDENTIAL = 'user-dockerhub-token'
 	}
 
@@ -93,16 +69,16 @@ pipeline {
 				echo "PATH_ANSIBLE_INVENTORY = ${PATH_ANSIBLE_INVENTORY}"
 				script {
 					echo "Listando opções SDK disponíveis"
-			        	sh (script: "update-java-alternatives --list", returnStatus: true) 
+			        sh (script: "update-java-alternatives --list", returnStatus: true) 
         
-                    			if ("${JAVA_VERSION}" == '11') {
-                        			echo 'Setando config para Java SDK 11'
-                        			sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.11.0-openjdk-amd64'
+                    if ("${JAVA_VERSION}" == '11') {
+                    	echo 'Setando config para Java SDK 11'
+                        sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.11.0-openjdk-amd64'
                         
 					} else if("${JAVA_VERSION}" == '8') {
-                        			echo 'Setando config para Java SDK 8'
-                        			sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.8.0-openjdk-amd64'
-                    			}
+                        echo 'Setando config para Java SDK 8'
+                       	sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.8.0-openjdk-amd64'
+                    }
 				}
 			}
 		}
@@ -116,7 +92,7 @@ pipeline {
 
 		stage('Unit Tests') {
 			steps {
-    				echo "Iniciando unit tests"
+    			echo "Iniciando unit tests"
 				sh 'mvn -version'
 				sh 'mvn clean test'
 			}
