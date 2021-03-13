@@ -15,7 +15,7 @@ docker volume create jenkins-data
 - Executa container referenciando volume criado para jenkins, home para compartilhar arquivos e docker do host para execução de comandos na esteira.
  
 ```
-docker run -it --rm --name ubuntu-jenkins-ansible -p 8080:8080 -v jenkins-data:/var/lib/jenkins -v ${HOME}:/home -v /var/run/docker.sock:/var/run/docker.sock ubuntu-jenkins /bin/bash
+docker run -it --rm --name ubuntu-jenkins-ansible -p 8080:8080 -v jenkins-data:/var/lib/jenkins -v ${HOME}:/home -v /var/run/docker.sock:/var/run/docker.sock jonathasgarcia/ubuntu-jenkins-ansible /bin/bash
 ```
 
 
