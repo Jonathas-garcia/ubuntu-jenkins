@@ -4,7 +4,7 @@ Projeto com dockerfile que sobe imagem ubuntu com jenkins e Ansible instalados(e
 
 # Passos
 
-### Executando ubunto com Jenkins
+### Executando ubuntu com Jenkins
 
 - Cria volume jenkins-data
 
