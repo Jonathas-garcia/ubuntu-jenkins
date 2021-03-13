@@ -18,6 +18,7 @@ RUN sudo apt -y install ansible
 
 #INSTALA JENKINS
 RUN sudo apt -y install openjdk-8-jdk
+RUN sudo apt -y install openjdk-11-jdk
 RUN wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
 RUN sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
 RUN sudo apt-get update
