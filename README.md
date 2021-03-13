@@ -39,7 +39,9 @@ docker run -it --rm --name ubuntu-jenkins-ansible -p 8080:8080 -v jenkins-data:/
   
 ### Pipeline utilizado para projetos maven versões Java 11 e 8:
 
-- Configurar variáveis
+- Criar job Pipeline
+
+- Script
 
 ```
 
@@ -69,16 +71,15 @@ pipeline {
 				echo "PATH_ANSIBLE_INVENTORY = ${PATH_ANSIBLE_INVENTORY}"
 				script {
 					echo "Listando opções SDK disponíveis"
-			        sh (script: "update-java-alternatives --list", returnStatus: true) 
+			        	sh (script: "update-java-alternatives --list", returnStatus: true) 
         
-                    if ("${JAVA_VERSION}" == '11') {
-                    	echo 'Setando config para Java SDK 11'
-                        sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.11.0-openjdk-amd64'
-                        
+                    			if ("${JAVA_VERSION}" == '11') {
+                    				echo 'Setando config para Java SDK 11'
+                        			sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.11.0-openjdk-amd64'
 					} else if("${JAVA_VERSION}" == '8') {
-                        echo 'Setando config para Java SDK 8'
-                       	sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.8.0-openjdk-amd64'
-                    }
+                        			echo 'Setando config para Java SDK 8'
+                       				sh 'sudo update-java-alternatives --set /usr/lib/jvm/java-1.8.0-openjdk-amd64'
+			                }
 				}
 			}
 		}
@@ -148,23 +149,23 @@ pipeline {
 ## Na máquina host (rodando jenkins)
 
 - Copiar chave SSH de acesso a instancia EC2. 
-	- (/var/lib/jenkins/workspace/playbooks/NOME_DA_CHAVE.pem)
-- Copiar arquivos hosts e playbook.yml. 
-	- (/var/lib/jenkins/workspace/playbooks)
-- Permissão na chave PEM(avaliar outras alternativas).
+- Permissão na chave PEM.
+```
+chmod 777 chave.pem
+```
 
 
-### Arquivo *hosts*
+### Arquivo *ansible-files/hosts*
 - Alterar arquivo com os parâmetros corretos.
 	 - **IP_MAQUINA_DESTINO** = IP máquina EC2. Exemplo: 54.237.114.3
 	 - **NOME_USUARIO** = Usuário para se conectar a instância EC2. Exemplo: ubuntu
-	 - **PATH_CHAVE_SSH** = Path absoluto da chave PEM. Exemplo: /var/lib/jenkins/workspace/playbooks/chave.pem
+	 - **PATH_CHAVE_SSH** = Path absoluto da chave PEM. Exemplo: /ansible-files/chave.pem
 ```
 [webservers]
 {IP_MAQUINA_DESTINO} ansible_connection=ssh ansible_user={NOME_USUARIO} ansible_ssh_private_key_file={PATH_CHAVE_SSH} ansible_python_interpreter=/usr/bin/python3
 ```
 
-### Arquivo *playbook.yml*
+### Arquivo *ansible-files/playbook.yml*
   - Setar portas utilizadas pela aplicação.
 
 ## Na máquina EC2 (destino)
