@@ -178,5 +178,6 @@ chmod 777 chave.pem
 apt update
 apt install python3 python3-pip
 pip3 install docker docker-compose
+sudo usermod -aG docker $USER
 ```
   
